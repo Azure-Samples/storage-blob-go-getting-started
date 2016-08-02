@@ -17,7 +17,7 @@ func main() {
 	printError(err)
 }
 
-//blobSamples creates a container, and performs operations with page blobs, append blobs and block blobs.
+// blobSamples creates a container, and performs operations with page blobs, append blobs and block blobs.
 func blobSamples(containerName, pageBlobName, appendBlobName, blockBlobName string) error {
 	fmt.Println("Get credentials...")
 	credentials := map[string]string{
@@ -45,16 +45,18 @@ func blobSamples(containerName, pageBlobName, appendBlobName, blockBlobName stri
 	printError(blockBlobOperations(&blobClient, containerName, blockBlobName))
 	printError(pageBlobOperations(&blobClient, containerName, pageBlobName))
 
-	// fmt.Println("Delete container...")
-	// if _, err = blobClient.DeleteContainerIfExists(containerName); err != nil {
-	// 	return err
-	// }
+	/*
+		fmt.Println("Delete container...")
+		if _, err = blobClient.DeleteContainerIfExists(containerName); err != nil {
+			return err
+		}
+	*/
 	return nil
 }
 
-//appendBlobOperations performs simple append blob operations.
-//ExtraHeaders adds metadata to the blob (in this example, Content-Type).
-//For more information, please visit: https://msdn.microsoft.com/library/azure/ee691975.aspx
+// appendBlobOperations performs simple append blob operations.
+// ExtraHeaders adds metadata to the blob (in this example, Content-Type).
+// For more information, please visit: https://msdn.microsoft.com/library/azure/ee691975.aspx
 func appendBlobOperations(blobClient *storage.BlobStorageClient, containerName, appendBlobName string) error {
 	fmt.Println("Create an empty append blob...")
 	extraHeaders := map[string]string{
@@ -72,17 +74,19 @@ func appendBlobOperations(blobClient *storage.BlobStorageClient, containerName, 
 	printError(downloadBlob(blobClient, containerName, appendBlobName, "appendBlob.txt"))
 	printError(printBlobList(blobClient, containerName))
 
-	// fmt.Println("Delete append blob...")
-	// if _, err := blobClient.DeleteBlobIfExists(containerName, appendBlobName, nil); err != nil {
-	// 	return err
-	// }
+	/*
+		fmt.Println("Delete append blob...")
+		if _, err := blobClient.DeleteBlobIfExists(containerName, appendBlobName, nil); err != nil {
+			return err
+		}
+	*/
 	return nil
 }
 
-//blockBlobOperations performs simple block blob operations.
-//Blocks of the the block blob are uploaded with PutBlock function.
-//Once all the blocks are uploaded, PutBlockList is used to write/commit those blocks into the blob.
-//For more information, please visit: https://msdn.microsoft.com/library/azure/ee691964.aspx
+// blockBlobOperations performs simple block blob operations.
+// Blocks of the the block blob are uploaded with PutBlock function.
+// Once all the blocks are uploaded, PutBlockList is used to write/commit those blocks into the blob.
+// For more information, please visit: https://msdn.microsoft.com/library/azure/ee691964.aspx
 func blockBlobOperations(blobClient *storage.BlobStorageClient, containerName, blockBlobName string) error {
 	fmt.Println("Create an empty block blob...")
 	if err := blobClient.CreateBlockBlob(containerName, blockBlobName); err != nil {
@@ -117,21 +121,23 @@ func blockBlobOperations(blobClient *storage.BlobStorageClient, containerName, b
 	printError(downloadBlob(blobClient, containerName, blockBlobName, "blockBlob.txt"))
 	printError(printBlobList(blobClient, containerName))
 
-	// fmt.Println("Delete block blob...")
-	// if _, err = blobClient.DeleteBlobIfExists(containerName, blockBlobName, nil); err != nil {
-	// 	return err
-	// }
+	/*
+		fmt.Println("Delete block blob...")
+		if _, err = blobClient.DeleteBlobIfExists(containerName, blockBlobName, nil); err != nil {
+			return err
+		}
+	*/
 	return nil
 }
 
-//pageBlobOperations performs simple page blob operations.
-//ExtraHeaders adds metadata to the blob (in this example, Content-Type).
-//For more information, please visit: https://msdn.microsoft.com/library/azure/ee691975.aspx
+// pageBlobOperations performs simple page blob operations.
+// ExtraHeaders adds metadata to the blob (in this example, Content-Type).
+// For more information, please visit: https://msdn.microsoft.com/library/azure/ee691975.aspx
 func pageBlobOperations(blobClient *storage.BlobStorageClient, containerName, pageBlobName string) error {
 	fmt.Println("Create an empty page blob...")
 	extraHeaders := map[string]string{
 		"Content-Type": "text/plain"}
-	//Page blobs' sizes must be multiples of 512.
+	// Page blobs' sizes must be multiples of 512.
 	if err := blobClient.PutPageBlob(containerName, pageBlobName, int64(512*5), extraHeaders); err != nil {
 		return err
 	}
@@ -139,8 +145,8 @@ func pageBlobOperations(blobClient *storage.BlobStorageClient, containerName, pa
 	fmt.Println("Writing in the page blob...")
 	pageLen := 512 * 3
 	pageData := randomData(pageLen)
-	//PutPage can update or clear data in the page blob, just change the writeType argument.
-	//The range for the chunks inside the blob must be aligned to 512 byte boundaries.
+	// PutPage can update or clear data in the page blob, just change the writeType argument.
+	// The range for the chunks inside the blob must be aligned to 512 byte boundaries.
 	if err := blobClient.PutPage(containerName, pageBlobName, 0, int64(pageLen-1), storage.PageWriteTypeUpdate, pageData, extraHeaders); err != nil {
 		return err
 	}
@@ -158,14 +164,16 @@ func pageBlobOperations(blobClient *storage.BlobStorageClient, containerName, pa
 	printError(downloadBlob(blobClient, containerName, pageBlobName, "pageBlob.txt"))
 	printError(printBlobList(blobClient, containerName))
 
-	// fmt.Println("Delete page blob...")
-	// if _, err = blobClient.DeleteBlobIfExists(containerName, pageBlobName, nil); err != nil {
-	// 	return err
-	// }
+	/*
+		fmt.Println("Delete page blob...")
+		if _, err = blobClient.DeleteBlobIfExists(containerName, pageBlobName, nil); err != nil {
+			return err
+		}
+	*/
 	return nil
 }
 
-//checkEnvVar checks if the environment variables are actually set.
+// checkEnvVar checks if the environment variables are actually set.
 func checkEnvVar(envVars *map[string]string) error {
 	var missingVars []string
 	for name, v := range *envVars {
@@ -179,14 +187,14 @@ func checkEnvVar(envVars *map[string]string) error {
 	return nil
 }
 
-//printError prints non nil errors.
+// printError prints non nil errors.
 func printError(err error) {
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 	}
 }
 
-//randomData returns a byte array with random bytes.
+// randomData returns a byte array with random bytes.
 func randomData(strLen int) []byte {
 	ran := 'z' - '0'
 	text := make([]byte, strLen)
@@ -199,7 +207,7 @@ func randomData(strLen int) []byte {
 	return text
 }
 
-//downloadBlob writes the blob's data into a local file.
+// downloadBlob writes the blob's data into a local file.
 func downloadBlob(blobClient *storage.BlobStorageClient, containerName, blobName, fileName string) error {
 	fmt.Printf("Download blob data into '%v'...\n", fileName)
 	if _, err := os.Stat(fileName); err == nil {
@@ -217,7 +225,7 @@ func downloadBlob(blobClient *storage.BlobStorageClient, containerName, blobName
 	return ioutil.WriteFile(fileName, bytesRead, 0666)
 }
 
-//printBlockList prints both committed and uncommitted blocks on a block blob.
+// printBlockList prints both committed and uncommitted blocks on a block blob.
 func printBlockList(blobClient *storage.BlobStorageClient, containerName, blockBlobName string) error {
 	fmt.Println("Get block list...")
 	list, err := blobClient.GetBlockList(containerName, blockBlobName, storage.BlockListTypeAll)
@@ -236,9 +244,9 @@ func printBlockList(blobClient *storage.BlobStorageClient, containerName, blockB
 	return nil
 }
 
-//printBlobList prints all blobs' names in a container.
-//ListBlobsParameters can customize a blobs list.
-//For more information, please visit: https://godoc.org/github.com/Azure/azure-sdk-for-go/storage#ListBlobsParameters
+// printBlobList prints all blobs' names in a container.
+// ListBlobsParameters can customize a blobs list.
+// For more information, please visit: https://godoc.org/github.com/Azure/azure-sdk-for-go/storage#ListBlobsParameters
 func printBlobList(blobClient *storage.BlobStorageClient, containerName string) error {
 	fmt.Printf("Get blob list from container '%v'...\n", containerName)
 	list, err := blobClient.ListBlobs(containerName, storage.ListBlobsParameters{})
