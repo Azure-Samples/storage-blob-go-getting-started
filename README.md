@@ -15,8 +15,13 @@ This example demonstrates how to use the Blob Storage service with Go. If you do
 2. Set environment variables `AZURE_STORAGE_ACCOUNT_NAME = <ACCOUNT_NAME>` and `AZURE_STORAGE_ACCOUNT_KEY = <ACCOUNT_KEY>`.
 3. Get the [Azure SDK for Go](https://github.com/Azure/azure-sdk-for-go) using command `go get -u github.com/Azure/azure-sdk-for-go`
 4. Get this sample using command `go get -u github.com/Azure-Samples/storage-blob-go-getting-started`
-5. Open the storageExample.go file and replace this line `credentials, err := getCredentials(emulator)` with this line `credentials, err := getCredentials(account)`, inside the blobSamples function.
-6. Compile and run the sample.
+5. Depending on if you prefer running the sample against Azure or Azure Storage Emulator, comment / uncomment these lines in the blobSamples function in [storageExample.go](storageExample.go).
+```go
+credentials, err := getCredentials(emulator)
+// credentials, err := getCredentials(account)
+```
+6. If using the Storage Emulator, verify it is already running.
+7. Compile and run the sample.
 
 ##Find documentation
 - [About Azure storage accounts](https://azure.microsoft.com/documentation/articles/storage-create-storage-account/)

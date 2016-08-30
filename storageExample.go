@@ -28,6 +28,7 @@ func main() {
 func blobSamples(containerName, pageBlobName, appendBlobName, blockBlobName string) error {
 	fmt.Println("Get credentials...")
 	credentials, err := getCredentials(emulator)
+	// credentials, err := getCredentials(account)
 	if err != nil {
 		return err
 	}
