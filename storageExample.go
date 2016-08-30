@@ -11,6 +11,13 @@ import (
 	"github.com/Azure/azure-sdk-for-go/storage"
 )
 
+type storageEnvironment string
+
+const (
+	emulator storageEnvironment = "emulator"
+	account  storageEnvironment = "account"
+)
+
 func main() {
 	fmt.Println("Azure Storage Blob Sample")
 	err := blobSamples("demoblobconatiner", "demoPageBlob", "demoAppendBlob", "demoBlockBlob")
@@ -20,10 +27,9 @@ func main() {
 // blobSamples creates a container, and performs operations with page blobs, append blobs and block blobs.
 func blobSamples(containerName, pageBlobName, appendBlobName, blockBlobName string) error {
 	fmt.Println("Get credentials...")
-	credentials := map[string]string{
-		"AZURE_STORAGE_ACCOUNT_NAME": os.Getenv("AZURE_STORAGE_ACCOUNT_NAME"),
-		"AZURE_STORAGE_ACCOUNT_KEY":  os.Getenv("AZURE_STORAGE_ACCOUNT_KEY")}
-	if err := checkEnvVar(&credentials); err != nil {
+	credentials, err := getCredentials(emulator)
+	// credentials, err := getCredentials(account)
+	if err != nil {
 		return err
 	}
 
@@ -38,6 +44,9 @@ func blobSamples(containerName, pageBlobName, appendBlobName, blockBlobName stri
 
 	fmt.Println("Create container with private access type...")
 	if _, err := blobClient.CreateContainerIfNotExists(containerName, storage.ContainerAccessTypePrivate); err != nil {
+		if credentials["AZURE_STORAGE_ACCOUNT_NAME"] == storage.StorageEmulatorAccountName {
+			return fmt.Errorf("If you are running with the emulator credentials, plaase make sure you have started the storage emmulator. Press the Windows key and type Azure Storage to select and run it from the list of applications - then restart the sample. %v", err)
+		}
 		return err
 	}
 
@@ -171,6 +180,25 @@ func pageBlobOperations(blobClient *storage.BlobStorageClient, containerName, pa
 		}
 	*/
 	return nil
+}
+
+// getCredentials returns a map containing the storage account name and key. It supports Azure Storage Emulator
+func getCredentials(env storageEnvironment) (map[string]string, error) {
+	credentials := map[string]string{}
+	switch env {
+	case emulator:
+		return map[string]string{
+			"AZURE_STORAGE_ACCOUNT_NAME": storage.StorageEmulatorAccountName,
+			"AZURE_STORAGE_ACCOUNT_KEY":  storage.StorageEmulatorAccountKey}, nil
+	case account:
+		credentials = map[string]string{
+			"AZURE_STORAGE_ACCOUNT_NAME": os.Getenv("AZURE_STORAGE_ACCOUNT_NAME"),
+			"AZURE_STORAGE_ACCOUNT_KEY":  os.Getenv("AZURE_STORAGE_ACCOUNT_KEY")}
+		if err := checkEnvVar(&credentials); err != nil {
+			return nil, err
+		}
+	}
+	return credentials, nil
 }
 
 // checkEnvVar checks if the environment variables are actually set.

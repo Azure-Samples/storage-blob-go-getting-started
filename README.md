@@ -3,17 +3,32 @@
 This example demonstrates how to use the Blob Storage service with Go. If you don't have a Microsoft Azure subscription you can get a FREE trial account [here](https://azure.microsoft.com/pricing/free-trial).
 
 ##Instructions
+
+###Using Azure Storage Emulator
+1. Download, install and run the [Azure Storage Emulator](https://azure.microsoft.com/documentation/articles/storage-use-emulator/).
+2. Get the [Azure SDK for Go](https://github.com/Azure/azure-sdk-for-go) using command `go get -u github.com/Azure/azure-sdk-for-go`
+3. Get this sample using command `go get -u github.com/Azure-Samples/storage-blob-go-getting-started`
+4. Compile and run the sample.
+
+###Using Storage Service
 1. Create a [storage account](https://azure.microsoft.com/documentation/articles/storage-create-storage-account/#create-a-storage-account) through the Azure Portal.
 2. Set environment variables `AZURE_STORAGE_ACCOUNT_NAME = <ACCOUNT_NAME>` and `AZURE_STORAGE_ACCOUNT_KEY = <ACCOUNT_KEY>`.
 3. Get the [Azure SDK for Go](https://github.com/Azure/azure-sdk-for-go) using command `go get -u github.com/Azure/azure-sdk-for-go`
 4. Get this sample using command `go get -u github.com/Azure-Samples/storage-blob-go-getting-started`
-5. Compile and run the sample.
+5. Depending on if you prefer running the sample against Azure or Azure Storage Emulator, comment / uncomment these lines in the blobSamples function in [storageExample.go](storageExample.go).
+```go
+credentials, err := getCredentials(emulator)
+// credentials, err := getCredentials(account)
+```
+6. If using the Storage Emulator, verify it is already running.
+7. Compile and run the sample.
 
 ##Find documentation
 - [About Azure storage accounts](https://azure.microsoft.com/documentation/articles/storage-create-storage-account/)
 - [Get started with Azure Blob - Blob service concepts](https://azure.microsoft.com/documentation/articles/storage-dotnet-how-to-use-blobs/#blob-service-concepts) - This link is for .NET, but the blob service concepts are the same
 - [Blob Service Concepts](https://msdn.microsoft.com/library/dd179376.aspx)
 - [Blob Service REST API](https://msdn.microsoft.com/library/dd135733.aspx)
+- [Azure Storage Emulator](https://azure.microsoft.com/documentation/articles/storage-use-emulator/)
 
 ***
 
