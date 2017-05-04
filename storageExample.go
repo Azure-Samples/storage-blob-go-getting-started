@@ -2,14 +2,13 @@
 package main
 
 import (
+	"bytes"
 	"encoding/base64"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"os"
-
-	"bytes"
 
 	"github.com/Azure/azure-sdk-for-go/storage"
 )
@@ -39,18 +38,6 @@ func init() {
 	onErrorFail(err, "Create client failed")
 
 	blobCli = client.GetBlobService()
-
-	// delete all containers in the emulator
-	if *emulator {
-		list, err := blobCli.ListContainers(storage.ListContainersParameters{})
-		onErrorFail(err, "List containers failed")
-
-		for _, c := range list.Containers {
-			cnt := blobCli.GetContainerReference(c.Name)
-			err = cnt.Delete(nil)
-			onErrorFail(err, "Delete container failed")
-		}
-	}
 }
 
 func main() {
@@ -65,7 +52,7 @@ func blobSamples(containerName, pageBlobName, appendBlobName, blockBlobName stri
 	options := storage.CreateContainerOptions{
 		Access: storage.ContainerAccessTypePrivate,
 	}
-	err := cnt.Create(&options)
+	_, err := cnt.CreateIfNotExists(&options)
 	if err != nil {
 		if accountName == storage.StorageEmulatorAccountName {
 			onErrorFail(err, "Create container failed: If you are running with the emulator credentials, plaase make sure you have started the storage emmulator. Press the Windows key and type Azure Storage to select and run it from the list of applications - then restart the sample")
@@ -73,6 +60,7 @@ func blobSamples(containerName, pageBlobName, appendBlobName, blockBlobName stri
 		onErrorFail(err, "Create container failed")
 	}
 
+	// Append blobs are not supported in the Azure Storage emulator
 	if !*emulator {
 		err = appendBlobOperations(cnt, appendBlobName)
 		onErrorFail(err, "Append blob operations failed")
