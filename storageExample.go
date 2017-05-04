@@ -40,7 +40,7 @@ func init() {
 
 	blobCli = client.GetBlobService()
 
-	// delete all container in the emulator
+	// delete all containers in the emulator
 	if *emulator {
 		list, err := blobCli.ListContainers(storage.ListContainersParameters{})
 		onErrorFail(err, "List containers failed")
@@ -105,8 +105,7 @@ func blobSamples(containerName, pageBlobName, appendBlobName, blockBlobName stri
 }
 
 // appendBlobOperations performs simple append blob operations.
-// ExtraHeaders adds metadata to the blob (in this example, Content-Type).
-// For more information, please visit: https://msdn.microsoft.com/library/azure/ee691975.aspx
+// For more information, please visit: https://docs.microsoft.com/en-us/rest/api/storageservices/operations-on-append-blobs
 func appendBlobOperations(cnt storage.Container, appendBlobName string) error {
 	fmt.Println("Create an empty append blob...")
 	b := cnt.GetBlobReference(appendBlobName)
@@ -134,7 +133,7 @@ func appendBlobOperations(cnt storage.Container, appendBlobName string) error {
 // blockBlobOperations performs simple block blob operations.
 // Blocks of the the block blob are uploaded with PutBlock function.
 // Once all the blocks are uploaded, PutBlockList is used to write/commit those blocks into the blob.
-// For more information, please visit: https://msdn.microsoft.com/library/azure/ee691964.aspx
+// For more information, please visit: https://docs.microsoft.com/en-us/rest/api/storageservices/operations-on-block-blobs
 func blockBlobOperations(cnt storage.Container, blockBlobName string) error {
 	fmt.Println("Create an empty block blob...")
 	b := cnt.GetBlobReference(blockBlobName)
@@ -187,8 +186,7 @@ func blockBlobOperations(cnt storage.Container, blockBlobName string) error {
 }
 
 // pageBlobOperations performs simple page blob operations.
-// ExtraHeaders adds metadata to the blob (in this example, Content-Type).
-// For more information, please visit: https://msdn.microsoft.com/library/azure/ee691975.aspx
+// For more information, please visit: https://docs.microsoft.com/en-us/rest/api/storageservices/operations-on-page-blobs
 func pageBlobOperations(cnt storage.Container, pageBlobName string) error {
 	fmt.Println("Create an empty page blob...")
 	b := cnt.GetBlobReference(pageBlobName)
@@ -292,7 +290,7 @@ func printBlockList(b storage.Blob) error {
 
 // printBlobList prints all blobs' names in a container.
 // ListBlobsParameters can customize a blobs list.
-// For more information, please visit: https://godoc.org/github.com/Azure/azure-sdk-for-go/storage#ListBlobsParameters
+// For more information, please visit: https://docs.microsoft.com/en-us/rest/api/storageservices/list-blobs
 func printBlobList(cnt storage.Container) error {
 	fmt.Printf("Get blob list from container '%v'...\n", cnt.Name)
 	list, err := cnt.ListBlobs(storage.ListBlobsParameters{})
