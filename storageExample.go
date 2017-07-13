@@ -42,7 +42,7 @@ func init() {
 
 func main() {
 	fmt.Println("Azure Storage Blob Sample")
-	blobSamples("demoblobconatiner", "demoPageBlob", "demoAppendBlob", "demoBlockBlob")
+	blobSamples("demoblobcontainer", "demoPageBlob", "demoAppendBlob", "demoBlockBlob")
 }
 
 // blobSamples creates a container, and performs operations with page blobs, append blobs and block blobs.
@@ -62,17 +62,17 @@ func blobSamples(containerName, pageBlobName, appendBlobName, blockBlobName stri
 
 	// Append blobs are not supported in the Azure Storage emulator
 	if !*emulator {
-		err = appendBlobOperations(cnt, appendBlobName)
+		err = appendBlobOperations(*cnt, appendBlobName)
 		onErrorFail(err, "Append blob operations failed")
 	}
 
-	err = blockBlobOperations(cnt, blockBlobName)
+	err = blockBlobOperations(*cnt, blockBlobName)
 	onErrorFail(err, "Block blob operations failed")
 
-	err = pageBlobOperations(cnt, pageBlobName)
+	err = pageBlobOperations(*cnt, pageBlobName)
 	onErrorFail(err, "Page blob operations failed")
 
-	err = printBlobList(cnt)
+	err = printBlobList(*cnt)
 	onErrorFail(err, "List blobs failed")
 
 	fmt.Print("Press enter to delete the blobs, container and local files created in this sample...")
@@ -110,7 +110,7 @@ func appendBlobOperations(cnt storage.Container, appendBlobName string) error {
 		return fmt.Errorf("append block failed: %v", err)
 	}
 
-	err = downloadBlob(b, appendBlobFile)
+	err = downloadBlob(*b, appendBlobFile)
 	if err != nil {
 		return fmt.Errorf("download blob failed: %v", err)
 	}
@@ -138,7 +138,7 @@ func blockBlobOperations(cnt storage.Container, blockBlobName string) error {
 		return fmt.Errorf("put block failed: %v", err)
 	}
 
-	err = printBlockList(b)
+	err = printBlockList(*b)
 	if err != nil {
 		return fmt.Errorf("get block list failed: %v", err)
 	}
@@ -160,12 +160,12 @@ func blockBlobOperations(cnt storage.Container, blockBlobName string) error {
 		return fmt.Errorf("put block list failed: %v", err)
 	}
 
-	err = printBlockList(b)
+	err = printBlockList(*b)
 	if err != nil {
 		return fmt.Errorf("get block list failed: %v", err)
 	}
 
-	err = downloadBlob(b, blockBlobFile)
+	err = downloadBlob(*b, blockBlobFile)
 	if err != nil {
 		return fmt.Errorf("download blob failed: %v", err)
 	}
@@ -208,7 +208,7 @@ func pageBlobOperations(cnt storage.Container, pageBlobName string) error {
 		fmt.Printf("\tFrom page %v to page %v\n", pageRange.Start, pageRange.End)
 	}
 
-	err = downloadBlob(b, pageBlobFile)
+	err = downloadBlob(*b, pageBlobFile)
 	if err != nil {
 		return fmt.Errorf("download blob failed: %v", err)
 	}
