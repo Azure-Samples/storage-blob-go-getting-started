@@ -11,6 +11,7 @@ import (
 	"os"
 
 	"github.com/Azure/azure-sdk-for-go/storage"
+	"github.com/Azure/go-autorest/autorest/utils"
 )
 
 var (
@@ -31,12 +32,13 @@ func init() {
 		accountName = storage.StorageEmulatorAccountName
 		accountKey = storage.StorageEmulatorAccountKey
 	} else {
-		accountName = getEnvVarOrExit("ACCOUNT_NAME")
-		accountKey = getEnvVarOrExit("ACCOUNT_KEY")
+		accountName = utils.GetEnvVarOrExit("ACCOUNT_NAME")
+		accountKey = utils.GetEnvVarOrExit("ACCOUNT_KEY")
 	}
 	client, err := storage.NewBasicClient(accountName, accountKey)
 	onErrorFail(err, "Create client failed")
 
+	client.AddToUserAgent(fmt.Sprintf("sample/0004/%s", utils.GetCommit()))
 	blobCli = client.GetBlobService()
 }
 
@@ -290,17 +292,6 @@ func printBlobList(cnt storage.Container) error {
 		fmt.Printf("\t%v\n", b.Name)
 	}
 	return nil
-}
-
-// getEnvVarOrExit returns the value of specified environment variable or terminates if it's not defined.
-func getEnvVarOrExit(varName string) string {
-	value := os.Getenv(varName)
-	if value == "" {
-		fmt.Printf("Missing environment variable %s\n", varName)
-		os.Exit(1)
-	}
-
-	return value
 }
 
 // onErrorFail prints a failure message and exits the program if err is not nil.
