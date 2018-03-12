@@ -55,7 +55,7 @@ func blobSamples(containerName, pageBlobName, appendBlobName, blockBlobName stri
 	_, err := cnt.CreateIfNotExists(&options)
 	if err != nil {
 		if accountName == storage.StorageEmulatorAccountName {
-			onErrorFail(err, "Create container failed: If you are running with the emulator credentials, plaase make sure you have started the storage emmulator. Press the Windows key and type Azure Storage to select and run it from the list of applications - then restart the sample")
+			onErrorFail(err, "Create container failed: If you are running with the emulator credentials, please make sure you have started the storage emulator. Press the Windows key and type Azure Storage to select and run it from the list of applications - then restart the sample")
 		}
 		onErrorFail(err, "Create container failed")
 	}
