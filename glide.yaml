@@ -1,6 +1,0 @@
-package: github.com/Azure-Samples/storage-blob-go-getting-started
-import:
-- package: github.com/Azure/azure-sdk-for-go
-  version: v10.0.0-beta
-  subpackages:
-  - storage
